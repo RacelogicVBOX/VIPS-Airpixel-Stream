@@ -23,8 +23,8 @@ If any part of the documentation is unclear, or you need further information, pl
 
 ---
 
-![alt text](assets/AirPixel-White-01.png)
+![alt text](assets/AirPixel-Blue-01.jpg)
 
 ---
 
-![alt text](assets/VBPO-White.png)
+![alt text](assets/VBPO-Blue.jpg)
