@@ -849,7 +849,9 @@ pub fn parse_racelogic_data(mut msg: &[u8]) -> Result<AirpixelVipsData, Airpixel
         let iris = msg.read_u32::<LittleEndian>()?;
         let zoom = msg.read_u32::<LittleEndian>()?;
 
-        if focus & 0x80000000 != 0 {
+        const CALIBRATION_BIT: u32 = 1 << 31;
+
+        if focus & CALIBRATION_BIT != 0 {
             fiz_data.focus = (focus & 0x7FFFFFFF) / 100;
             fiz_data.calibrated_focus = true;
         } else {
@@ -857,21 +859,21 @@ pub fn parse_racelogic_data(mut msg: &[u8]) -> Result<AirpixelVipsData, Airpixel
             fiz_data.focus = focus;
         }
 
-        if iris & (1 << 31) != 0 {
-            fiz_data.iris = (iris & 0x00FFFFFF) / 100;
+        if iris & CALIBRATION_BIT != 0 {
+            fiz_data.iris = (iris & 0x7FFFFFFF) / 100;
             fiz_data.calibrated_iris = true;
         } else {
             fiz_data.calibrated_iris = false;
             fiz_data.iris = iris;
         }
 
-        if zoom & (1 << 31) != 0 {
+        if zoom & CALIBRATION_BIT != 0 {
             let multiplier = (zoom & 0x7F000000) >> 24;
             fiz_data.zoom = (zoom & 0x00FFFFFF) * multiplier / 100;
             fiz_data.calibrated_zoom = true;
         } else {
             fiz_data.calibrated_zoom = false;
-            fiz_data.zoom = zoom & 0x00FFFFFF;
+            fiz_data.zoom = zoom & 0x00FFFFFF; // Even uncalibrated, mask out top byte
         }
     }
 

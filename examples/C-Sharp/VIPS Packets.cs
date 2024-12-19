@@ -1,3 +1,5 @@
+//Note this library assumes you are running on a LittleEndian system (which most PCs are)
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;

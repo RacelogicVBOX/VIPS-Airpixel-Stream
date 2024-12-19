@@ -67,15 +67,15 @@ class RacelogicStream():
 
 
     class Utils():
-        speed       = us.Struct('h')
-        position    = us.Struct('d')
-        heading     = us.Struct('h') # Same as speed but here for clarity
-        height      = us.Struct('i')
+        speed       = us.Struct('<h')
+        position    = us.Struct('<d')
+        heading     = us.Struct('<h') # Same as speed but here for clarity
+        height      = us.Struct('<i')
 
-        uInt16      = us.Struct('H')
-        uInt32      = us.Struct('I')
-        float32     = us.Struct('f')
-        double      = us.Struct('d')
+        uInt16      = us.Struct('<H')
+        uInt32      = us.Struct('<I')
+        float32     = us.Struct('<f')
+        double      = us.Struct('<d')
 
     class Mask:
         GLOBAL              = 1<<0      #0x0001
