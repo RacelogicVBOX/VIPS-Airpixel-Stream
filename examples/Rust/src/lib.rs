@@ -21,21 +21,6 @@ use std::io::Read;
 /// This value is used as a basic length check before attempting to parse the packet.
 pub const MIN_PACKET_SIZE: usize = 34;
 
-/// An internal lazy helper macro for generating inline boolean "has_xxx_data" methods on `AirpixelVipsData`.
-/// Each generated method checks whether a given option bit is set in `options_mask`.
-macro_rules! option_methods {
-    ($($name:ident => $variant:ident),+) => {
-        impl AirpixelVipsData {
-            $(
-                #[inline]
-                fn $name(&self) -> bool {
-                    (self.options_mask & OptionField::$variant as u32) != 0
-                }
-            )+
-        }
-    };
-}
-
 /// An enum representing the various errors that can occur when parsing a FlexibleBinaryStream message.
 #[derive(Debug)]
 pub enum AirpixelVipsError {
@@ -485,6 +470,21 @@ pub struct AirpixelVipsData {
     pub quaternions: Option<QuaternionDataField>,
     /// The checksum of this message, validated after parsing.
     pub checksum: u16,
+}
+
+/// An internal lazy helper macro for generating inline boolean "has_xxx_data" methods on `AirpixelVipsData`.
+/// Each generated method checks whether a given option bit is set in `options_mask`.
+macro_rules! option_methods {
+    ($($name:ident => $variant:ident),+) => {
+        impl AirpixelVipsData {
+            $(
+                #[inline]
+                fn $name(&self) -> bool {
+                    (self.options_mask & OptionField::$variant as u32) != 0
+                }
+            )+
+        }
+    };
 }
 
 option_methods! {
