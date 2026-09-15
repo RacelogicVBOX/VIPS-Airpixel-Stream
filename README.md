@@ -18,6 +18,7 @@ Welcome to the VIPS-Airpixel-Stream repository! This repository contains documen
 
 3. Simulator
    - [Simulator](<simulator>): A prebuilt application that simulates the VIPS and Airpixel serial streams for testing and development purposes.
+   - The version in this repository needs the .NET 8 Desktop Runtime. If you would rather not install anything, a self-contained build that runs on its own is attached to the [latest release](../../releases/latest).
 
 If any part of the documentation is unclear, or you need further information, please don't hesitate to get in contact via <support@racelogic.co.uk>.
 
