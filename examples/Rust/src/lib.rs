@@ -206,6 +206,8 @@ pub enum LensType {
     Canon = 0x03,
     Arri = 0x04,
     Zeis = 0x05,
+    Shotover = 0x06,
+    Gss = 0x07,
 }
 
 // Implementing conversion from LensType to u8
@@ -226,6 +228,8 @@ impl TryFrom<u8> for LensType {
             0x03 => Ok(LensType::Canon),
             0x04 => Ok(LensType::Arri),
             0x05 => Ok(LensType::Zeis),
+            0x06 => Ok(LensType::Shotover),
+            0x07 => Ok(LensType::Gss),
             _ => Err(()),
         }
     }
@@ -241,6 +245,8 @@ impl LensType {
             LensType::Canon => "Canon".to_string(),
             LensType::Arri => "Arri".to_string(),
             LensType::Zeis => "Zeis".to_string(),
+            LensType::Shotover => "Shotover".to_string(),
+            LensType::Gss => "GSS".to_string(),
         }
     }
 }
@@ -868,7 +874,8 @@ pub fn parse_racelogic_data(mut msg: &[u8]) -> Result<AirpixelVipsData, Airpixel
         }
 
         if zoom & CALIBRATION_BIT != 0 {
-            let multiplier = (zoom & 0x7F000000) >> 24;
+            // Bits 30-24 carry the telephoto multiplier, 0 = no teleconverter fitted
+            let multiplier = ((zoom & 0x7F000000) >> 24).max(1);
             fiz_data.zoom = (zoom & 0x00FFFFFF) * multiplier / 100;
             fiz_data.calibrated_zoom = true;
         } else {

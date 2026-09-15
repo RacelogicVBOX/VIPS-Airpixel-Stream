@@ -133,8 +133,8 @@ class RacelogicStream():
         f59_94      = 9
         f59_94DF    = 10
         f60         = 11
-        FreeRun     = 0xFE
-        Unknown     = 0xFF
+        Unknown     = 0xFE
+        FreeRun     = 0xFF
 
     class VCULensType:
         Preston     = 1
@@ -142,6 +142,8 @@ class RacelogicStream():
         Canon       = 3
         Arri        = 4
         Zeiss       = 5
+        Shotover    = 6
+        GSS         = 7
         # Reserved for other manufacturers
         Other       = 255
 
@@ -260,6 +262,7 @@ class RacelogicStream():
             zoom_data = cls.Utils.uInt32.unpack_from(msg, read_pos)[0]
             if zoom_data & cls.FizOptions.FIZ_CALIBRATED_ZOOM:
                 multiplier = (zoom_data & cls.FizOptions.FIZ_ZOOM_MULTIPLIER) >> 24
+                multiplier = multiplier if multiplier else 1  # 0 = no teleconverter fitted
                 cls.zoom = ((zoom_data & 0x00FFFFFF) * multiplier) / 100
             else:
                 cls.zoomRAW = zoom_data & 0x00FFFFFF
