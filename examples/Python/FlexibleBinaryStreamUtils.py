@@ -117,24 +117,22 @@ class RacelogicStream():
         VCU_UsingGPS = 1<<1
         VCU_UsingPoE = 1<<2
         VCU_UsingBattery = 1<<3
-        VCU_BatteryCharging = 1<<4
+        VCU_BatteryUnavailable = 1<<4 # charge too low or fault
         VCU_Logging = 1<<5
         VCU_SD_AlmostFull = 1<<6
 
-    class VCUFrameRate:
+    class VCUFrameRate: # Index as sent by the VCU firmware. Drop-frame is not indicated in this field.
+        NoSync      = 0
         f23_976     = 1
         f24         = 2
         f25         = 3
         f29_97      = 4
-        f29_97DF    = 5
-        f30         = 6
+        f30         = 5
+        f47_95      = 6
         f48         = 7
         f50         = 8
         f59_94      = 9
-        f59_94DF    = 10
-        f60         = 11
-        Unknown     = 0xFE
-        FreeRun     = 0xFF
+        f60         = 10
 
     class VCULensType:
         Preston     = 1

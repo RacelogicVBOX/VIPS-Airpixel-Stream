@@ -103,12 +103,12 @@ pub enum VCUFlags {
     Timecode = 0x01,
     /// GNSS data is present.
     GNSS = 0x02,
-    /// Battery data is present.
-    Battery = 0x04,
-    /// Powered over Ethernet.
-    PoE = 0x08,
-    /// Battery is currently charging.
-    BatteryCharging = 0x10,
+    /// Powered over Ethernet (clear = VIN).
+    PoE = 0x04,
+    /// Running on the backup battery.
+    OnBattery = 0x08,
+    /// Backup battery unavailable (charge too low or fault).
+    BatteryUnavailable = 0x10,
     /// Logging is active.
     LoggingActive = 0x20,
     /// Media warning (No space or approaching full).
@@ -117,7 +117,8 @@ pub enum VCUFlags {
 
 /// Frame rates as enums, representing the frame rates supported by the system.
 ///
-/// Used primarily in Virtual Production use cases.
+/// Used primarily in Virtual Production use cases. The index follows the VCU
+/// firmware table; drop-frame is not indicated in this field.
 #[allow(non_camel_case_types, missing_docs)]
 #[derive(Default, Debug, Clone, Copy, PartialEq)]
 pub enum FrameRate {
@@ -127,16 +128,12 @@ pub enum FrameRate {
     FPS_24 = 0x02,
     FPS_25 = 0x03,
     FPS_29_97 = 0x04,
-    FPS_29_97_DF = 0x05,
-    FPS_30 = 0x06,
-    FPS_47_95 = 0x07,
-    FPS_48 = 0x08,
-    FPS_50 = 0x09,
-    FPS_59_94 = 0x0A,
-    FPS_59_94_DF = 0x0B,
-    FPS_60 = 0x0C,
-    FPS_Unknown = 0xFE,
-    FPS_Free_Run = 0xFF,
+    FPS_30 = 0x05,
+    FPS_47_95 = 0x06,
+    FPS_48 = 0x07,
+    FPS_50 = 0x08,
+    FPS_59_94 = 0x09,
+    FPS_60 = 0x0A,
 }
 
 impl From<FrameRate> for u8 {
@@ -155,16 +152,12 @@ impl TryFrom<u8> for FrameRate {
             0x02 => Ok(FrameRate::FPS_24),
             0x03 => Ok(FrameRate::FPS_25),
             0x04 => Ok(FrameRate::FPS_29_97),
-            0x05 => Ok(FrameRate::FPS_29_97_DF),
-            0x06 => Ok(FrameRate::FPS_30),
-            0x07 => Ok(FrameRate::FPS_47_95),
-            0x08 => Ok(FrameRate::FPS_48),
-            0x09 => Ok(FrameRate::FPS_50),
-            0x0A => Ok(FrameRate::FPS_59_94),
-            0x0B => Ok(FrameRate::FPS_59_94_DF),
-            0x0C => Ok(FrameRate::FPS_60),
-            0xFE => Ok(FrameRate::FPS_Unknown),
-            0xFF => Ok(FrameRate::FPS_Free_Run),
+            0x05 => Ok(FrameRate::FPS_30),
+            0x06 => Ok(FrameRate::FPS_47_95),
+            0x07 => Ok(FrameRate::FPS_48),
+            0x08 => Ok(FrameRate::FPS_50),
+            0x09 => Ok(FrameRate::FPS_59_94),
+            0x0A => Ok(FrameRate::FPS_60),
             _ => Err(()),
         }
     }
@@ -179,16 +172,12 @@ impl FrameRate {
             FrameRate::FPS_24 => "24".to_string(),
             FrameRate::FPS_25 => "25".to_string(),
             FrameRate::FPS_29_97 => "29.97".to_string(),
-            FrameRate::FPS_29_97_DF => "29.97(DF)".to_string(),
             FrameRate::FPS_30 => "30".to_string(),
             FrameRate::FPS_47_95 => "47.95".to_string(),
             FrameRate::FPS_48 => "48".to_string(),
             FrameRate::FPS_50 => "50".to_string(),
             FrameRate::FPS_59_94 => "59.94".to_string(),
-            FrameRate::FPS_59_94_DF => "59.94(DF)".to_string(),
             FrameRate::FPS_60 => "60".to_string(),
-            FrameRate::FPS_Unknown => "Unknown".to_string(),
-            FrameRate::FPS_Free_Run => "Free Run".to_string(),
         }
     }
 }

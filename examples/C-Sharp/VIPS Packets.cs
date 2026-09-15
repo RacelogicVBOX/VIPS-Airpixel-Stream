@@ -11,7 +11,8 @@ namespace RacelogicVIPS {
 
     class VIPSPacket {
 
-        public enum FIZ_FrameRate { None, f23_976, f24, f25, f29_97, f29_97DF, f30, f48, f50, f59_94, f59_94DF, f60, UnknownSync=254, FreeRun=255, Other };
+        // Frame rate index as sent by the VCU firmware. Drop-frame is not indicated in this field.
+        public enum FIZ_FrameRate { None, f23_976, f24, f25, f29_97, f30, f47_95, f48, f50, f59_94, f60, Other };
         public enum LensType { None, Preston, Fuji, Canon, Arri, Zeiss, Shotover, GSS, Other };
 
 
@@ -102,7 +103,7 @@ namespace RacelogicVIPS {
         public bool VCU_UsingGPS { get { return ((VCU_Status & 0x02) != 0); } }
         public bool VCU_UsingPoE { get { return ((VCU_Status & 0x04) != 0); } }
         public bool VCU_UsingBattery { get { return ((VCU_Status & 0x08) != 0); } }
-        public bool VCU_BatteryCharging { get { return ((VCU_Status & 0x10) != 0); } }
+        public bool VCU_BatteryUnavailable { get { return ((VCU_Status & 0x10) != 0); } } // charge too low or fault
         public bool VCU_Logging { get { return ((VCU_Status & 0x20) != 0); } }
         public bool VCU_SD_AlmostFull { get { return ((VCU_Status & 0x40) != 0); } }
 
@@ -356,15 +357,12 @@ namespace RacelogicVIPS {
                     case 2: VIPSPacket.FrameRate = FIZ_FrameRate.f24; break;
                     case 3: VIPSPacket.FrameRate = FIZ_FrameRate.f25; break;
                     case 4: VIPSPacket.FrameRate = FIZ_FrameRate.f29_97; break;
-                    case 5: VIPSPacket.FrameRate = FIZ_FrameRate.f29_97DF; break;
-                    case 6: VIPSPacket.FrameRate = FIZ_FrameRate.f30; break;
+                    case 5: VIPSPacket.FrameRate = FIZ_FrameRate.f30; break;
+                    case 6: VIPSPacket.FrameRate = FIZ_FrameRate.f47_95; break;
                     case 7: VIPSPacket.FrameRate = FIZ_FrameRate.f48; break;
                     case 8: VIPSPacket.FrameRate = FIZ_FrameRate.f50; break;
                     case 9: VIPSPacket.FrameRate = FIZ_FrameRate.f59_94; break;
-                    case 10: VIPSPacket.FrameRate = FIZ_FrameRate.f59_94DF; break;
-                    case 11: VIPSPacket.FrameRate = FIZ_FrameRate.f60; break;
-                    case 254: VIPSPacket.FrameRate = FIZ_FrameRate.UnknownSync; break;
-                    case 255: VIPSPacket.FrameRate = FIZ_FrameRate.FreeRun; break;
+                    case 10: VIPSPacket.FrameRate = FIZ_FrameRate.f60; break;
                     default: VIPSPacket.FrameRate = FIZ_FrameRate.Other; break;
                 }
                 switch (messageBuffer[readPoint++]) {
