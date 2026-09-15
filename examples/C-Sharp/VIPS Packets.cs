@@ -11,8 +11,8 @@ namespace RacelogicVIPS {
 
     class VIPSPacket {
 
-        public enum FIZ_FrameRate { None, f23_976, f24, f25, f29_97, f29_97DF, f30, f48, f50, f59_94, f59_94DF, f60, FreeRun=254, Other };
-        public enum LensType { None, Preston, Fuji, Canon, Arri, Zeiss, Other };
+        public enum FIZ_FrameRate { None, f23_976, f24, f25, f29_97, f29_97DF, f30, f48, f50, f59_94, f59_94DF, f60, UnknownSync=254, FreeRun=255, Other };
+        public enum LensType { None, Preston, Fuji, Canon, Arri, Zeiss, Shotover, GSS, Other };
 
 
         public UInt32 timeMS;
@@ -102,8 +102,9 @@ namespace RacelogicVIPS {
         public bool VCU_UsingGPS { get { return ((VCU_Status & 0x02) != 0); } }
         public bool VCU_UsingPoE { get { return ((VCU_Status & 0x04) != 0); } }
         public bool VCU_UsingBattery { get { return ((VCU_Status & 0x08) != 0); } }
-        public bool VCU_Logging { get { return ((VCU_Status & 0x10) != 0); } }
-        public bool VCU_SD_AlmostFull { get { return ((VCU_Status & 0x20) != 0); } }
+        public bool VCU_BatteryCharging { get { return ((VCU_Status & 0x10) != 0); } }
+        public bool VCU_Logging { get { return ((VCU_Status & 0x20) != 0); } }
+        public bool VCU_SD_AlmostFull { get { return ((VCU_Status & 0x40) != 0); } }
 
 
         const UInt32 OUTPUT_GLOBAL_POSITION = 0x01 << 0;
@@ -222,7 +223,7 @@ namespace RacelogicVIPS {
                 readPoint += 4;
                 VIPSPacket.Yaw = BitConverter.ToSingle(messageBuffer, readPoint);
                 readPoint += 4;
-				EulerValid = true;
+                VIPSPacket.EulerValid = true;
             }
 
             // read velocity
@@ -312,25 +313,21 @@ namespace RacelogicVIPS {
 
 
             if ((maskFlags & OUTPUT_FIZ_DATA) == OUTPUT_FIZ_DATA) { // 8 bytes
+                // Legacy format carries no calibration flag: values are mm / 100ths of a T-Stop / mm for
+                // calibrated lenses, or raw encoder counts otherwise (lens dependant). Both views are filled in.
                 VIPSPacket.FIZ_Valid = true;
-                if (VIPSPacket.FIZ_CalibratedFocus) {
-                    VIPSPacket.FocusDistanceMM = (float)BitConverter.ToUInt32(messageBuffer, readPoint);
-                } else {
-                    VIPSPacket.FocusDistanceRAW = BitConverter.ToUInt32(messageBuffer, readPoint);
-                }
+                var focus = BitConverter.ToUInt32(messageBuffer, readPoint);
                 readPoint += 4;
-                if (VIPSPacket.FIZ_CalibratedIris) {
-                    VIPSPacket.IrisTStops = (float)(BitConverter.ToUInt16(messageBuffer, readPoint) / 100.0f);
-                } else {
-                    VIPSPacket.IrisRAW = BitConverter.ToUInt16(messageBuffer, readPoint);
-                }
+                var iris = BitConverter.ToUInt16(messageBuffer, readPoint);
                 readPoint += 2;
-                if (VIPSPacket.FIZ_CalibratedZoom) {
-                    VIPSPacket.FocalLengthMM = (float)BitConverter.ToUInt16(messageBuffer, readPoint) / 100.0f;
-                } else {
-                    VIPSPacket.FocalLengthRAW = BitConverter.ToUInt16(messageBuffer, readPoint);
-                }
+                var zoom = BitConverter.ToUInt16(messageBuffer, readPoint);
                 readPoint += 2;
+                VIPSPacket.FocusDistanceMM = focus;
+                VIPSPacket.FocusDistanceRAW = (int)focus;
+                VIPSPacket.IrisTStops = iris / 100.0f;
+                VIPSPacket.IrisRAW = iris;
+                VIPSPacket.FocalLengthMM = zoom;
+                VIPSPacket.FocalLengthRAW = zoom;
             }
 
             if ((maskFlags & OUTPUT_ORIGIN) == OUTPUT_ORIGIN) { // 24 bytes
@@ -366,7 +363,8 @@ namespace RacelogicVIPS {
                     case 9: VIPSPacket.FrameRate = FIZ_FrameRate.f59_94; break;
                     case 10: VIPSPacket.FrameRate = FIZ_FrameRate.f59_94DF; break;
                     case 11: VIPSPacket.FrameRate = FIZ_FrameRate.f60; break;
-                    case 254: VIPSPacket.FrameRate = FIZ_FrameRate.FreeRun; break;
+                    case 254: VIPSPacket.FrameRate = FIZ_FrameRate.UnknownSync; break;
+                    case 255: VIPSPacket.FrameRate = FIZ_FrameRate.FreeRun; break;
                     default: VIPSPacket.FrameRate = FIZ_FrameRate.Other; break;
                 }
                 switch (messageBuffer[readPoint++]) {
@@ -376,6 +374,8 @@ namespace RacelogicVIPS {
                     case 3: VIPSPacket.Lens = LensType.Canon; break;
                     case 4: VIPSPacket.Lens = LensType.Arri; break;
                     case 5: VIPSPacket.Lens = LensType.Zeiss; break;
+                    case 6: VIPSPacket.Lens = LensType.Shotover; break;
+                    case 7: VIPSPacket.Lens = LensType.GSS; break;
                     default: VIPSPacket.Lens = LensType.Other; break;
                 }
 
@@ -391,9 +391,13 @@ namespace RacelogicVIPS {
 
                 VIPSPacket.QuarternianValid = true;
                 VIPSPacket.Quart_x = BitConverter.ToSingle(messageBuffer, readPoint);
+                readPoint += 4;
                 VIPSPacket.Quart_i = BitConverter.ToSingle(messageBuffer, readPoint);
+                readPoint += 4;
                 VIPSPacket.Quart_j = BitConverter.ToSingle(messageBuffer, readPoint);
+                readPoint += 4;
                 VIPSPacket.Quart_k = BitConverter.ToSingle(messageBuffer, readPoint);
+                readPoint += 4;
 
             } else
                 VIPSPacket.QuarternianValid = false;
@@ -412,23 +416,23 @@ namespace RacelogicVIPS {
                 VIPSPacket.FIZ_CalibratedFocus = ((FocusDistance & (1 << 31)) == 1 << 31);
                 VIPSPacket.FIZ_CalibratedIris = ((Iris & (1 << 31)) == 1 << 31);
                 VIPSPacket.FIZ_CalibratedZoom = ((Zoom & (1 << 31)) == 1 << 31);
-                VIPSPacket.TelephotoMultiplier = (Zoom >> 24) & 0x7f;
+                VIPSPacket.TelephotoMultiplier = (int)((Zoom >> 24) & 0x7f); // 0 = no teleconverter fitted
 
                 if (VIPSPacket.FIZ_CalibratedFocus) {
                     VIPSPacket.FocusDistanceMM = (FocusDistance & ~(1<<31))/100.0f;
                 } else {
-                    VIPSPacket.FocusDistanceRAW = FocusDistance;
+                    VIPSPacket.FocusDistanceRAW = (int)FocusDistance;
                 }
 
                 if (VIPSPacket.FIZ_CalibratedIris) {
                     VIPSPacket.IrisTStops = (Iris & ~(1 << 31)) / 100.0f;
                 } else {
-                    VIPSPacket.IrisRAW = Iris;
+                    VIPSPacket.IrisRAW = (int)Iris;
                 }
                 if (VIPSPacket.FIZ_CalibratedZoom) {
-                    VIPSPacket.FocusLengthMM = (Zoom & 0x00ffffff)/100.0f;
+                    VIPSPacket.FocalLengthMM = (Zoom & 0x00ffffff)/100.0f;
                 } else {
-                    VIPSPacket.FocusLengthRAW = (Zoom & 0x00ffffff)
+                    VIPSPacket.FocalLengthRAW = (int)(Zoom & 0x00ffffff);
                 }
             }
 
