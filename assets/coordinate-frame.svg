@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 650" width="880" height="650" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="axis" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 Z" fill="#0b63ce"/>
+    </marker>
+    <marker id="rot" markerWidth="9" markerHeight="7.5" refX="8" refY="3.75" orient="auto">
+      <path d="M0,0 L9,3.75 L0,7.5 Z" fill="#b8460e"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="880" height="650" fill="#ffffff"/>
+  <rect x="0.5" y="0.5" width="879" height="649" fill="none" stroke="#d0d7de"/>
+
+  <text x="24" y="34" font-size="17" font-weight="600" fill="#1f2328">VIPS / Airpixel local coordinate frame</text>
+  <text x="24" y="56" font-size="13" fill="#57606a">Position in metres from the site origin. Angles in degrees.</text>
+
+  <line x1="24" y1="330" x2="856" y2="330" stroke="#d0d7de" stroke-dasharray="4 4"/>
+
+  <!-- ==================== TOP : POSITION AXES ==================== -->
+  <text x="40" y="96" font-size="14" font-weight="600" fill="#1f2328">Position axes</text>
+  <text x="40" y="116" font-size="12.5" fill="#57606a">Plan view, looking down from above.</text>
+
+  <line x1="210" y1="262" x2="210" y2="152" stroke="#0b63ce" stroke-width="2.5" marker-end="url(#axis)"/>
+  <line x1="210" y1="262" x2="332" y2="262" stroke="#0b63ce" stroke-width="2.5" marker-end="url(#axis)"/>
+  <text x="222" y="152" font-size="14" font-weight="600" fill="#0b63ce">+Y</text>
+  <text x="322" y="286" font-size="14" font-weight="600" fill="#0b63ce">+X</text>
+
+  <circle cx="210" cy="262" r="9" fill="#ffffff" stroke="#0b63ce" stroke-width="2.5"/>
+  <circle cx="210" cy="262" r="2.6" fill="#0b63ce"/>
+  <text x="192" y="267" font-size="14" font-weight="600" fill="#0b63ce" text-anchor="end">+Z</text>
+  <text x="210" y="300" font-size="12" fill="#57606a" text-anchor="middle">site origin</text>
+
+  <text x="450" y="178" font-size="13.5" fill="#1f2328"><tspan font-weight="600" fill="#0b63ce">+X</tspan>  points East</text>
+  <text x="450" y="208" font-size="13.5" fill="#1f2328"><tspan font-weight="600" fill="#0b63ce">+Y</tspan>  points North</text>
+  <text x="450" y="238" font-size="13.5" fill="#1f2328"><tspan font-weight="600" fill="#0b63ce">+Z</tspan>  points up, out of the page</text>
+  <text x="450" y="274" font-size="12.5" fill="#57606a">All three are in metres, measured from</text>
+  <text x="450" y="292" font-size="12.5" fill="#57606a">the site origin.</text>
+
+  <!-- ==================== BOTTOM : ROTATION DIRECTIONS ==================== -->
+  <text x="40" y="372" font-size="14" font-weight="600" fill="#1f2328">Positive rotation directions</text>
+  <text x="40" y="392" font-size="12.5" fill="#57606a">Each view below looks at the unit from a different side.</text>
+
+  <!-- ROLL : rear view of the car, right side down -->
+  <text x="190" y="432" font-size="13.5" font-weight="600" fill="#1f2328" text-anchor="middle">Roll</text>
+  <text x="190" y="450" font-size="12" fill="#57606a" text-anchor="middle">seen from behind</text>
+  <path d="M 132 530 A 58 58 0 0 1 248 530" fill="none" stroke="#b8460e" stroke-width="2.2" marker-end="url(#rot)"/>
+  <rect x="155" y="536" width="9" height="15" rx="3" fill="#44506b"/>
+  <rect x="216" y="536" width="9" height="15" rx="3" fill="#44506b"/>
+  <path d="M 161 545 L 161 513 L 168 502 L 212 502 L 219 513 L 219 545 Z" fill="#dbe6f6" stroke="#0b63ce" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M 172 505 L 208 505 L 212 517 L 168 517 Z" fill="#ffffff" stroke="#0b63ce" stroke-width="1.2" stroke-linejoin="round"/>
+  <rect x="164" y="523" width="7" height="9" rx="2" fill="#ffffff" stroke="#0b63ce" stroke-width="1.1"/>
+  <rect x="209" y="523" width="7" height="9" rx="2" fill="#ffffff" stroke="#0b63ce" stroke-width="1.1"/>
+  <rect x="163" y="536" width="54" height="5" rx="2" fill="#aebfd8"/>
+  <text x="190" y="614" font-size="12.5" fill="#b8460e" text-anchor="middle">positive = right side down</text>
+
+  <!-- PITCH : side view of the car facing right, nose up -->
+  <text x="450" y="432" font-size="13.5" font-weight="600" fill="#1f2328" text-anchor="middle">Pitch</text>
+  <text x="450" y="450" font-size="12" fill="#57606a" text-anchor="middle">seen from the left</text>
+  <path d="M 392 530 A 58 58 0 0 0 508 530" fill="none" stroke="#b8460e" stroke-width="2.2" marker-end="url(#rot)"/>
+  <path d="M 404 541 L 410 541 A 10 10 0 0 1 430 541 L 471 541 A 10 10 0 0 1 491 541 L 497 541 L 497 529 L 491 522 L 469 521 L 459 502 L 423 502 L 412 521 L 404 526 Z" fill="#dbe6f6" stroke="#0b63ce" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M 426 505 L 456 505 L 464 519 L 416 519 Z" fill="#ffffff" stroke="#0b63ce" stroke-width="1.2" stroke-linejoin="round"/>
+  <line x1="441" y1="505" x2="441" y2="519" stroke="#0b63ce" stroke-width="1.1"/>
+  <circle cx="420" cy="541" r="9" fill="#44506b"/>
+  <circle cx="420" cy="541" r="3.4" fill="#dbe6f6"/>
+  <circle cx="481" cy="541" r="9" fill="#44506b"/>
+  <circle cx="481" cy="541" r="3.4" fill="#dbe6f6"/>
+  <text x="502" y="516" font-size="10.5" fill="#57606a">front</text>
+  <text x="450" y="614" font-size="12.5" fill="#b8460e" text-anchor="middle">positive = nose up</text>
+
+  <!-- YAW : plan view of the car facing up, clockwise -->
+  <text x="710" y="432" font-size="13.5" font-weight="600" fill="#1f2328" text-anchor="middle">Yaw</text>
+  <text x="710" y="450" font-size="12" fill="#57606a" text-anchor="middle">seen from above</text>
+  <path d="M 652 530 A 58 58 0 0 1 768 530" fill="none" stroke="#b8460e" stroke-width="2.2" marker-end="url(#rot)"/>
+  <rect x="686" y="508" width="7" height="13" rx="2" fill="#44506b"/>
+  <rect x="727" y="508" width="7" height="13" rx="2" fill="#44506b"/>
+  <rect x="686" y="539" width="7" height="13" rx="2" fill="#44506b"/>
+  <rect x="727" y="539" width="7" height="13" rx="2" fill="#44506b"/>
+  <path d="M 710 500 C 719 500 728 505 728 515 L 728 546 C 728 556 719 560 710 560 C 701 560 692 556 692 546 L 692 515 C 692 505 701 500 710 500 Z" fill="#dbe6f6" stroke="#0b63ce" stroke-width="1.8"/>
+  <path d="M 701 516 L 719 516 L 722 527 L 698 527 Z" fill="#ffffff" stroke="#0b63ce" stroke-width="1.2" stroke-linejoin="round"/>
+  <rect x="698" y="528" width="24" height="12" fill="#ffffff" stroke="#0b63ce" stroke-width="1.1"/>
+  <path d="M 698 541 L 722 541 L 719 550 L 701 550 Z" fill="#ffffff" stroke="#0b63ce" stroke-width="1.2" stroke-linejoin="round"/>
+  <text x="710" y="493" font-size="10.5" fill="#57606a" text-anchor="middle">front</text>
+  <text x="710" y="614" font-size="12.5" fill="#b8460e" text-anchor="middle">positive = clockwise</text>
+</svg>
