@@ -9,10 +9,10 @@ A Windows tool that generates the same position stream a real VIPS rover or Airp
 
 If installing the runtime is awkward on your machine, use the self-contained build attached to the [latest release](../../releases/latest) instead. It is a larger download but has no prerequisites; the first launch takes a few seconds longer while it unpacks.
 
-Both builds are signed by Racelogic Ltd, so you can check the publisher in the file's Properties before running it. The SHA256 of the v1.1.0 self-contained zip is:
+Both builds are signed by Racelogic Ltd, so you can check the publisher in the file's Properties before running it. The SHA256 of the v1.2.0 self-contained zip is:
 
 ```
-3EA1BCE6681823DB41BA7C2C413443C7EAB3C95B41DB8F7FA6F19CA146E3C681  FakePositionSimulator-1.1.0-win-x64-selfcontained.zip
+B9A4AE56B0CE696EA5AC4D9A5065FD88B8A77B1C9FB6FADB677D7DD695292250  FakePositionSimulator-1.2.0-win-x64-selfcontained.zip
 ```
 
 Each release publishes the checksum of its own asset; verify with `Get-FileHash <file> -Algorithm SHA256` in PowerShell.
@@ -51,7 +51,7 @@ The window is a single scrolling page. From the top:
 
 **Location.** The origin in latitude, longitude and altitude, the starting position in metres, and the motion pattern: static, circle, polygon or star, plus a vertical circle or wave. Random position noise can be added here.
 
-**Orientation, FIZ data, VCU status, System status.** Roll, pitch and yaw (or face the direction of travel automatically), focus, iris and zoom values in calibrated or raw encoder form, the VCU flags a receiver might react to, and the beacon count, solution type and Kalman filter state.
+**Orientation, FIZ data, VCU status, System status.** Roll, pitch and yaw, which can instead face the direction of travel, face the centre of the pattern, or pan back and forth between a set angle. Then focus, iris and zoom values in calibrated or raw encoder form, the VCU flags a receiver might react to, and the beacon count, solution type and Kalman filter state.
 
 Everything on the page can be saved with File > Save Settings and reloaded later. Save the file into the `Profiles` folder next to the executable and it will appear in the Profiles menu the next time the simulator starts.
 
