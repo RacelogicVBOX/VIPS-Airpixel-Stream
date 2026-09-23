@@ -47,13 +47,19 @@ The window is a single scrolling page. From the top:
 
 **Timing.** Output rate in Hz, whether the timestamp starts at midnight or at the current time, and two ways to make the timing imperfect: random jitter in milliseconds and a clock rate error in parts per million.
 
-**VIPS option mask.** Which optional blocks appear in the VIPS binary packet. Each checkbox shows its bit value and the packet size updates as you go. This box is only shown when VIPS is the selected format.
+**VIPS option mask.** Which optional blocks appear in the VIPS binary packet. Each checkbox shows its bit value and the packet size updates as you go. This box is only shown when VIPS is the selected format. It also holds the Test forwards compatibility tick box, described below.
 
 **Location.** The origin in latitude, longitude and altitude, the starting position in metres, and the motion pattern: static, circle, polygon or star, plus a vertical circle or wave. Random position noise can be added here.
 
 **Orientation, FIZ data, VCU status, System status.** Roll, pitch and yaw, which can instead face the direction of travel, face the centre of the pattern, or pan back and forth between a set angle. Then focus, iris and zoom values in calibrated or raw encoder form, the VCU flags a receiver might react to, and the beacon count, solution type and Kalman filter state.
 
 Everything on the page can be saved with File > Save Settings and reloaded later. Save the file into the `Profiles` folder next to the executable and it will appear in the Profiles menu the next time the simulator starts.
+
+## Testing your parser
+
+Tick **Test forwards compatibility** in the VIPS option mask panel. The simulator then appends one to three fake fields to every packet, on mask bits that this protocol has not defined, which is exactly what a future firmware release will do. The panel shows which bits and sizes it picked and the full mask going out on the wire. Untick and retick for a different set.
+
+A parser written to the rules in the Forwards compatibility section of [docs/README.md](../docs/README.md) carries on decoding every real field and validating the checksum with no change at all. If yours starts reporting checksum errors or garbage values while the box is ticked, it is working out the message length from its own table of fields instead of reading the length field, and it will break the day a real field is added.
 
 ## Command line
 
