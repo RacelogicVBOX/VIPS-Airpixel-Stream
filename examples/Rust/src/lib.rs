@@ -28,7 +28,7 @@ pub enum AirpixelVipsError {
     MissingHeader,
     /// The provided data buffer does not match the expected length specified in the message.
     IncorrectLength,
-    /// The options mask does not match the expected payload length or contains unknown bits.
+    /// The message is shorter than the fields its options mask says are present.
     MaskError,
     /// The checksum computed from the data does not match the one provided in the message.
     ChecksumError,
@@ -47,7 +47,7 @@ impl std::fmt::Display for AirpixelVipsError {
         match self {
             Self::MissingHeader => write!(f, "Unable to find message start"),
             Self::IncorrectLength => write!(f, "Insufficient data length"),
-            Self::MaskError => write!(f, "Unknown Mask Bytes or Length doesnt match"),
+            Self::MaskError => write!(f, "Message shorter than its options mask requires"),
             Self::ChecksumError => write!(f, "Checksum Failed"),
             Self::IoError(_) => write!(f, "IO Error"),
         }
@@ -583,7 +583,8 @@ impl AirpixelVipsData {
         )
     }
 
-    /// Computes the expected length of the message based on the bits set in `options_mask`.
+    /// Computes the minimum message length implied by the known bits in `options_mask`.
+    /// A real message may be longer if it carries fields defined after this parser was written.
     fn expected_length(&self) -> u16 {
         let mut msg_len = MIN_PACKET_SIZE as u16; // Header, Message length, Options mask, Time, Location, Checksum
         if self.has_status_data() {
@@ -711,7 +712,10 @@ pub fn parse_racelogic_data(mut msg: &[u8]) -> Result<AirpixelVipsData, Airpixel
 
     vips_data.options_mask = msg.read_u32::<LittleEndian>()?;
 
-    if vips_data.message_length != vips_data.expected_length() {
+    // Only reject a message that is too short for the fields its mask claims. A longer message
+    // carries fields defined after this parser was written; they sit after everything we read,
+    // and the checksum was already taken from the end of the buffer, so they are simply skipped.
+    if vips_data.message_length < vips_data.expected_length() {
         return Err(AirpixelVipsError::MaskError);
     }
 
