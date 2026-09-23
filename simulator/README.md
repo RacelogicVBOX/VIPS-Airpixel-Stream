@@ -9,10 +9,10 @@ A Windows tool that generates the same position stream a real VIPS rover or Airp
 
 If installing the runtime is awkward on your machine, use the self-contained build attached to the [latest release](../../releases/latest) instead. It is a larger download but has no prerequisites; the first launch takes a few seconds longer while it unpacks.
 
-Both builds are signed by Racelogic Ltd, so you can check the publisher in the file's Properties before running it. The SHA256 of the v1.3.0 self-contained zip is:
+Both builds are signed by Racelogic Ltd, so you can check the publisher in the file's Properties before running it. The SHA256 of the v1.3.1 self-contained zip is:
 
 ```
-C508BE7887A62603EE4101C690096962E4B55ADD2743F509B87CFEE9F580A114  FakePositionSimulator-1.3.0-win-x64-selfcontained.zip
+A3736E2B0EA6F7538BD91327863D6B4E86E4BB8FFAE71CF92637AEA11CF1919B  FakePositionSimulator-1.3.1-win-x64-selfcontained.zip
 ```
 
 Each release publishes the checksum of its own asset; verify with `Get-FileHash <file> -Algorithm SHA256` in PowerShell.
